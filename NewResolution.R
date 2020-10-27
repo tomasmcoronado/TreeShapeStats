@@ -158,28 +158,28 @@ main = function(low,high,nstat){
       pitchforks <- extractPitchforks(tree, NTips,tip ) 
      
       # calculate Ic
-      statMatrix[j,1] <- colless(as.treeshape(root))
+      #statMatrix[j,1] <- colless(as.treeshape(root))
       
       # calculate  Sackin
-      statMatrix[j,2] <- sackin(as.treeshape(root),norm = NULL)
+      #statMatrix[j,2] <- sackin(as.treeshape(root),norm = NULL)
       
       # calculate stat Variance
-      statMatrix[j,3] <- var(Nis[1:tip]) 
+      #statMatrix[j,3] <- var(Nis[1:tip]) 
       
       # calculate stat I2
-      statMatrix[j,4] <- statI2(tree, NTips,tip, n)
+      #statMatrix[j,4] <- statI2(tree, NTips,tip, n)
       
       # calculate stat B1
-      statMatrix[j,5] <- sum(apply(as.matrix(MHat[(tip+2):(2*tip-1)]),1,function(x) 1/x))
+      #statMatrix[j,5] <- sum(apply(as.matrix(MHat[(tip+2):(2*tip-1)]),1,function(x) 1/x))
       
       # calculate stat B2
-      statMatrix[j,6] <- sum(apply(as.matrix(Nis[1:tip]),1,function(x) x/2^x))
+      #statMatrix[j,6] <- sum(apply(as.matrix(Nis[1:tip]),1,function(x) x/2^x))
       
       # calculate stat Saless: combination of sackin and colless on each node for all nodes in tree
       statMatrix[j,7] <- 1.300745*statMatrix[j,2]+statMatrix[j,1]
       
       # calculate stat TCP: combination of number of Tips and Pitchforks for all internal nodes. 
-      statMatrix[j,8] <- statTP(tree,NTips, pitchforks,tip)
+      #statMatrix[j,8] <- statTP(tree,NTips, pitchforks,tip)
   
     # creates a hash table for (newickformat of each phylogenic tree with given leaves, an index in [1..n])
     tree1 <- getCanonical(tree, NTips,tip)
@@ -266,4 +266,9 @@ adjacencygraph = function (trees, ha,tip) {
   K=head(K,-ind)
   adj=sparseMatrix(I,J,x=K)
   return(adj)
+}
+
+
+for (i in(7:21)) {
+  main(i,i,8)
 }

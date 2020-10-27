@@ -134,15 +134,15 @@ statTP=function (tree,NTips, pitchforks,tip){
 
 #The main function to compute the scaled resolution
 main = function(low,high,nstat){
-  outputdir <- "/home/mhayati/TreeStat/New"
+  outputdir <- "Colless2"
   filename <- paste(outputdir,"/resolutionTest.csv",sep='')
-  cat(", Ic, Sackin, Variance, I2, B1, B2, Saless,TP\n", file = filename, append = TRUE)
-  inputdir <-  "/home/mhayati/TreeStat/Trees"
+  cat(", Ic, Sackin, Variance, I2, B1, B2, Colless2,TP\n", file = filename, append = TRUE)
+  inputdir <-  "Trees"
   resolutionNew <- matrix (0, nrow = high -low +1 , ncol= nstat)
   for (tip in (low:high)) {
     
     # reading all phylogenic trees for a given number of tips from a file
-    inputfile <- paste(inputdir,"/tr",tip,".tre",sep="")
+    inputfile <- paste(inputdir,"/ts",tip,".txt",sep="")
     trees <- read.tree(inputfile, keep.multi = TRUE)
     # fill the Stat Matrix 
     n <- length(trees)
@@ -176,7 +176,7 @@ main = function(low,high,nstat){
       statMatrix[j,6] <- sum(apply(as.matrix(Nis[1:tip]),1,function(x) x/2^x))
       
       # calculate stat Saless: combination of sackin and colless on each node for all nodes in tree
-      statMatrix[j,7] <- 1.300745*statMatrix[j,2]+statMatrix[j,1]
+      statMatrix[j,7] <- statColless2(root)
       
       # calculate stat TCP: combination of number of Tips and Pitchforks for all internal nodes. 
       statMatrix[j,8] <- statTP(tree,NTips, pitchforks,tip)
@@ -267,5 +267,17 @@ LaplacianMatrix = function (trees, ha,tip) {
   return(LM)
 }
 
+statColless2 = function (tree) 
+{
+  tree=as.treeshape(tree)
+  if (identical(tree, NULL)) {
+    stop("invalid tree", "\n")
+  }
+  tmp = smaller.clade.spectrum(tree)
+  res = sum((tmp[, 1] - 2 * tmp[, 2])^2)
+  return(res)
+}
 
-
+for (i in(19:25)) {
+  main(i,i,8)
+}

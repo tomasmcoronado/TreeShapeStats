@@ -345,7 +345,7 @@ extractEquals = function (Ctree, tip) {
 main = function(low,high,nstat){
   outputdir <- "/Users/maryam/Google Drive/Research/Tree Stat/Codes/New"
   filename <- paste(outputdir,"/resolution.csv",sep='')
-  cat(", Ic, Sackin, Variance, I2, B1, B2,TP, Saless\n", file = filename, append = TRUE)
+  cat(", Ic, Sackin, Variance, I2, B1, B2,TP, Saless, Colless2\n", file = filename, append = TRUE)
   inputdir <- "/Users/maryam/Google Drive/Research/Tree Stat/Codes/Trees"
   resolutionNew <- matrix (0, nrow = high -low +1 , ncol= nstat)
   for (tip in (low:high)) {
@@ -389,7 +389,11 @@ main = function(low,high,nstat){
       
       # calculate stat TCP: combination of number of Tips, Cherries and Pitchforks for all internal nodes. 
       statMatrix[j,8] <- statTP(tree, NTips,  pitchforks, tip)
-    }
+      
+      # calculate stat Colless^2
+      statMatrix[j,7] <- statColless2(root)
+      
+      }
     
     NSt <- matrix(0, nrow = n, ncol= nstat)
     for (s in (1:nstat)){

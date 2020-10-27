@@ -372,15 +372,16 @@ DistanceMatrix = function (trees, ntip, metric) {
 # 1- Ic, 2- Sackin, 3- Variance, 4- I2,  5- B1, 6- B2
 # 7- TP, 8- Saless  
 main = function(low,high,met,nstat){
+  #nstat = 9
   
-  outputdir <- "C:\\Users\\Maryam\\Desktop\\Courses\\Spring 2016\\CMPT829\\Project\\trees"
+  outputdir <- "Colless2"
   filename <- paste(outputdir,"/resolutionspr.csv",sep='')
-  cat(", Ic, Sackin, Variance, I2, B1, B2,TP, Saless, TCP\n", file = filename, append = TRUE)
-  inputdir <- "C:\\Users\\Maryam\\Desktop\\Courses\\Spring 2016\\CMPT829\\Project\\trees"
+  cat(", Ic, Sackin, Variance, I2, B1, B2,TP, Colless2 \n", file = filename, append = TRUE)
+  inputdir <- "Trees"
   resolution <- matrix (0, nrow = high -low +1 , ncol= nstat)
   for (tip in (low:high)) {
     # reading all phylogenic trees for a given number of tips from a file
-    inputfile <- paste(inputdir,"/tr",tip,".tre",sep="")
+    inputfile <- paste(inputdir,"/ts",tip,".txt",sep="")
     trees <- read.tree(inputfile, keep.multi = TRUE)
     # fill the Stat Matrix 
     n <- length(trees)
@@ -416,8 +417,12 @@ main = function(low,high,met,nstat){
       # calculate stat Saless: combination of sackin and colless on each node for all nodes in tree
       statMatrix[j,7] <- statSaless(root)
       
+      # calculate stat Colless^2
+      statMatrix[j,8] <- statColless2(root)
+      #print(statColless2(root))
+      
       # calculate stat TCP: combination of number of Tips, Cherries and Pitchforks for all internal nodes. 
-      statMatrix[j,8] <- statTP(tree, NTips,  pitchforks, tip)
+      # statMatrix[j,8] <- statTP(tree, NTips,  pitchforks, tip)
       
       
     }
@@ -452,11 +457,23 @@ main = function(low,high,met,nstat){
   }  
 }
 
+statColless2 = function (tree) 
+{
+  tree=as.treeshape(tree)
+  if (identical(tree, NULL)) {
+    stop("invalid tree", "\n")
+  }
+  tmp = smaller.clade.spectrum(tree)
+  res = sum((tmp[, 1] - 2 * tmp[, 2])^2)
+  return(res)
+}
+
+
 statDistanceMatrix = function(tip) {
   nstat <- 2
   outputdir <- "C:\\Users\\Maryam\\Desktop\\Courses\\Spring 2016\\CMPT829\\Project\\trees"
   inputdir <- "C:\\Users\\Maryam\\Desktop\\Courses\\Spring 2016\\CMPT829\\Project\\trees"
-  inputfile <- paste(inputdir,"/tr",tip,".tre",sep="")
+  inputfile <- paste(inputdir,"/ts",tip,".txt",sep="")
   trees <- read.tree(inputfile, keep.multi = TRUE)
   # fill the Stat Matrix 
   n <- length(trees)
@@ -509,6 +526,8 @@ statDistanceMatrix = function(tip) {
 }  
 
 
+#for (i in(14:21)) {
+#  main(i,i,"NNI",8)
+#}
 
-
-
+main(17,17,"NNI",8)
